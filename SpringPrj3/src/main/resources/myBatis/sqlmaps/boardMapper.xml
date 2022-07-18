@@ -28,7 +28,7 @@
 			        Q.BNUM
 					FROM QUEST_BOARD Q, 
 	            	TUSERS T  
-	        		WHERE T.EMAIL = Q.EMAIL(+)
+	        		WHERE T.EMAIL = Q.EMAIL
 	        		AND Q.MENU_ID = 'MENU01'   --> 
 	        		Q.TITLE, 
 			        Q.QSEQ,
@@ -40,7 +40,7 @@
 			        T.NICKNAME
 			 		FROM QUEST_BOARD Q, 
 	            	TUSERS T
-	            	WHERE T.EMAIL = Q.EMAIL(+)  
+	            	WHERE T.EMAIL = Q.EMAIL  
 			 		AND Q.MENU_ID = 'MENU01'
 			<include refid="search"></include>   
 		<include refid="pagingFooter"></include>
@@ -67,7 +67,7 @@
 	   	<include refid="pagingHeader"></include>
 		 SELECT
 	        ROW_NUMBER() OVER (ORDER BY Q.NREF  DESC,  Q.STEP  ASC ) AS RN,
-	        DECODE( Q.LVL, 0, ' ', '[답글] ' ) || Q.TITLE AS TITLE,
+	        IF( Q.LVL = 0, Q.TITLE, '[답글] ' || Q.TITLE )  AS TITLE,
 					Q.LVL, 
 					Q.QSEQ,
 			        Q.WRITEDATE,
@@ -82,7 +82,7 @@
 			        Q.BNUM
 			FROM QUEST_BOARD Q, 
 	            TUSERS T  
-	        WHERE T.EMAIL = Q.EMAIL(+)
+	        WHERE T.EMAIL = Q.EMAIL
 	        AND Q.MENU_ID = 'MENU02'    
 			<include refid="search2"></include>   
 		<include refid="pagingFooter"></include>
@@ -92,7 +92,7 @@
 	    <!-- 원래꺼 <select id="listAll2" resultType="com.green.board.vo.BoardVo">
 	   	<include refid="pagingHeader"></include> 
 		 SELECT   
-			    	DECODE( LVL, 0, '', '[답글] ' ) || TITLE AS TITLE,
+			    	IF( LVL = 0, TITLE, '[답글] ' || TITLE ) AS TITLE,
 			    	LVL, 
 			        QSEQ,
 			        WRITEDATE,
@@ -114,7 +114,7 @@
 	    <!-- list 총 갯수 -->
 		<select id="countArticle" resultType="int">
 	   		SELECT COUNT(*) FROM QUEST_BOARD Q, TUSERS T
-	   		WHERE T.EMAIL = Q.EMAIL(+)
+	   		WHERE T.EMAIL = Q.EMAIL
 	   		AND Q.MENU_ID = 'MENU01'
 	    		<include refid="search"></include>
 		</select>
@@ -122,7 +122,7 @@
 		<!-- list 총 갯수 -->
 		<select id="countArticle2" resultType="int">
 	   		SELECT COUNT(*) FROM QUEST_BOARD Q, TUSERS T
-	   		WHERE T.EMAIL = Q.EMAIL(+)
+	   		WHERE T.EMAIL = Q.EMAIL
 	   		AND Q.MENU_ID = 'MENU02'
 	    		<include refid="search2"></include>
 		</select>
@@ -212,7 +212,7 @@
 		   Q.WRITEDATE,
 		   T.EMAIL
 		   FROM QUEST_BOARD Q, TUSERS T
-		   WHERE T.EMAIL = Q.EMAIL(+)
+		   WHERE T.EMAIL = Q.EMAIL
 		   AND Q.QSEQ = #{qseq}
 		   
 		   </select>
@@ -223,7 +223,7 @@
 	            resultType    = "com.green.board.vo.BoardVo">
 	      SELECT
 		   Q.TITLE,
-		   NVL(Q.CONT, ' ') CONT,
+		   COALESCE(Q.CONT, ' ') CONT,
 		   Q.QSEQ,
 		   Q.WRITEDATE,
 		   T.EMAIL,
@@ -233,7 +233,7 @@
 		   Q.NREF,
 		   Q.QSTATE
 		   FROM QUEST_BOARD Q, TUSERS T
-		   WHERE T.EMAIL = Q.EMAIL(+)
+		   WHERE T.EMAIL = Q.EMAIL
 		   AND Q.QSEQ = #{qseq}
 	     
 	    </select>
@@ -244,7 +244,7 @@
 	            resultType    = "com.green.board.vo.BoardVo">
 	      SELECT
 		   TITLE,
-		   NVL(CONT, ' ') CONT,
+		   COALESCE(CONT, ' ') CONT,
 		   QSEQ,
 		   WRITEDATE,
 		   BNUM,
@@ -273,10 +273,10 @@
 		    EMAIL
 		    
 		) VALUES (
-		    ( SELECT NVL(MAX(QSEQ),0)+1 FROM QUEST_BOARD) ,
+		    (SELECT QSEQ FROM ( SELECT COALESCE(MAX(QSEQ),0)+1 QSEQ FROM QUEST_BOARD) AS A) ,
 		    #{title},
 		    #{cont},
-		    SYSDATE,
+		    NOW(),
 		    'MENU01',
 		    'www.admin@admin.com'
 		    
@@ -298,16 +298,16 @@
 		    STEP,
 		    NREF
 		) VALUES (
-		    ( SELECT NVL(MAX(QSEQ),0)+1 FROM QUEST_BOARD ) ,
+		    (SELECT QSEQ FROM ( SELECT COALESCE(MAX(QSEQ),0)+1 QSEQ FROM QUEST_BOARD ) AS A) ,
 		    #{title},
 		    #{cont},
-		    SYSDATE,
+		    NOW(),
 		    'MENU02',
 		    #{email},
-		    ( SELECT NVL(MAX(LVL),0)+1 FROM QUEST_BOARD  ) ,
+		    (SELECT LVL FROM ( SELECT COALESCE(MAX(LVL),0)+1 LVL FROM QUEST_BOARD  ) AS A) ,
 		    0,
 		    0,
-		    ( SELECT NVL(MAX(QSEQ),0)+1 FROM QUEST_BOARD )
+		    (SELECT QSEQ FROM ( SELECT COALESCE(MAX(QSEQ),0)+1 QSEQ FROM QUEST_BOARD ) AS A)
 		    
 		    )
 		    
@@ -338,12 +338,12 @@
 		    STEP,
 		    NREF
 		) VALUES (
-		    ( SELECT NVL(MAX(QSEQ),0)+1 FROM QUEST_BOARD ) , 
+		    (SELECT QSEQ FROM ( SELECT COALESCE(MAX(QSEQ),0)+1 QSEQ FROM QUEST_BOARD ) AS A) , 
 		    'MENU02',
 		    #{title},
 		    #{cont},
 		     #{ email  },
-		    SYSDATE,
+		    NOW(),
 		    #{ bnum  },
 		    #{ lvl   } + 1 ,
 		    #{ step  } + 1,
@@ -382,7 +382,7 @@
 	   <!-- 삭제하기 -->
 	   <delete id="BoardDelete2">
 	      DELETE  FROM  QUEST_BOARD
-	       WHERE  QSEQ  =  #{ qseq } 
+	       WHERE  QSEQ   =  #{ qseq } 
 	   </delete>
 	   
 		      
