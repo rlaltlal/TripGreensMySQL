@@ -35,9 +35,9 @@
 	class="org.springframework.jdbc.datasource.DriverManagerDataSource"
 	>
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"></property>
-		<property name="url" value="jdbc:mysql://database-1.cbn6q3uvc6bs.ap-northeast-2.rds.amazonaws.com/testgreen?useSSL=false&amp;serverTimezone=UTC"></property>
-		<property name="username" value="admin"></property>
-		<property name="password" value="rlaltlal"></property>
+		<property name="url" value="jdbc:mysql://RDS 엔드포인트ㅡ"></property>
+		<property name="username" value=".."></property>
+		<property name="password" value=".."></property>
 		 
 		
 	</bean>
@@ -88,8 +88,8 @@
 	<oauth2:client id="oauth2ClientFilter" />	
 	<oauth2:resource id="google" 
 		type="authorization_code"
-		client-id="433814286993-i53h47j5oosfdveb2i33v6b8tiajkn46.apps.googleusercontent.com"
-		client-secret="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"
+		client-id=".."
+		client-secret=".."
 		access-token-uri="https://oauth2.googleapis.com/token"
 		user-authorization-uri="https://accounts.google.com/o/oauth2/auth"
 		scope="read"
