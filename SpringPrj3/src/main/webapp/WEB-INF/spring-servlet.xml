@@ -38,7 +38,7 @@
 		<property name="url" value="jdbc:mysql://database-1.cbn6q3uvc6bs.ap-northeast-2.rds.amazonaws.com/testgreen?useSSL=false&amp;serverTimezone=UTC"></property>
 		<property name="username" value="admin"></property>
 		<property name="password" value="rlaltlal"></property>
-		
+		 
 		
 	</bean>
 	
