@@ -16,14 +16,14 @@
                           WHERE RESERVSTATE='예약 완료' AND EMAIL=#{email} GROUP BY EMAIL
                           
         UNION ALL
-        SELECT NVL(NULL,0) AS COUNT
+        SELECT coalesce(NULL,0) AS COUNT
         FROM DUAL
         WHERE NOT EXISTS (         SELECT email, COUNT(*) AS COUNT
                           FROM ( SELECT EMAIL, RESERVSTATE
                                  FROM ACCOM_RESERVS 
                                  UNION ALL
                                  SELECT EMAIL, RESERVSTATE FROM TRAIN_RESERVS  ) T
-                          WHERE RESERVSTATE='예약 완료' AND EMAIL=#{email} GROUP BY EMAIL) AS A
+                          WHERE RESERVSTATE='예약 완료' AND EMAIL=#{email} GROUP BY EMAIL)
     </select>
 
 

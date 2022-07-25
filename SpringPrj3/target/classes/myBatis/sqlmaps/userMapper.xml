@@ -15,6 +15,18 @@
       AND   PASSWD = #{passwd}    
     
     </select>
+<select id="login_security"
+        resultType="com.green.user.vo.UserVo">
+     SELECT EMAIL, 
+            NICKNAME,
+            PASSWD,
+            RATE,
+            DATE_FORMAT(REGDATE, '%Y%m%d%H%i%s') REGDATE,
+            AUTHORITY 
+      FROM  TUSERS
+      WHERE EMAIL  = #{email}   
+    
+    </select>
    <select id="UserList"
       resultType="com.green.user.vo.UserVo">
       SELECT USERID,PASSWD,USERNAME,DATE_FORMAT(INDATE,'%Y%m%d%H%i%s') INDATE
@@ -113,6 +125,14 @@
         INSERT INTO TUSERS(   EMAIL,
                               NICKNAME,
                               PASSWD )
+                    VALUES(   #{email}
+                             , #{nickname}
+                             , #{passwd} )                
+    </insert> 
+       <insert id="save_oauth2">
+        INSERT INTO TUSERS(   EMAIL,
+                              NICKNAME,
+                              PASSWD)
                     VALUES(   #{email}
                              , #{nickname}
                              , #{passwd} )                

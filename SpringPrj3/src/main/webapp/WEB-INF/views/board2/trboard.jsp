@@ -176,7 +176,6 @@ table, th, td {
   </form>   
   </div>
   <div>
-
               <c:choose>
 		           <c:when test="${sessionScope.email eq null}">
 		  	           <a href="/login" style="padding-right: 20px ;">글쓰기</a>

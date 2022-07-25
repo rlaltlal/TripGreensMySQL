@@ -5,7 +5,11 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:p="http://www.springframework.org/schema/p"
-	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:oauth2="http://www.springframework.org/schema/security/oauth2"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.7.xsd
+		http://www.springframework.org/schema/security/oauth2 https://www.springframework.org/schema/security/spring-security-oauth2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
@@ -20,7 +24,6 @@
     <!--  html파일 접근 -->
     <mvc:resources location="WEB-INF/static/" mapping="/static/**"></mvc:resources>
     <mvc:resources location="WEB-INF/include/" mapping="/include/**"></mvc:resources>
-    
     
     <bean id="viewResolver" 
       class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -76,21 +79,30 @@
           <property name="maxUploadSize" value="100000000" />   
           <property name="maxInMemorySize" value="100000000" /> 
     </bean>
+       
+	<security:authentication-manager alias="authenticationmanager">	
+		<security:authentication-provider user-service-ref="userDetailsService"/>
+	</security:authentication-manager>
+	
+		<!--<security:authentication-provider user-service-ref="customOAuth2UserService"/><security:authentication-provider user-service-ref="customOAuth2UserService"/>-->
+	<oauth2:client id="oauth2ClientFilter" />	
+	<oauth2:resource id="google" 
+		type="authorization_code"
+		client-id="433814286993-i53h47j5oosfdveb2i33v6b8tiajkn46.apps.googleusercontent.com"
+		client-secret="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"
+		access-token-uri="https://oauth2.googleapis.com/token"
+		user-authorization-uri="https://accounts.google.com/o/oauth2/auth"
+		scope="read"
+		client-authentication-scheme="form"
+		
+		/>
+	<oauth2:client-details-service id="clientDetails">
+	
+	</oauth2:client-details-service>
+	 <!-- oauth 네임스페이스를 사용해야 oauth2ClientFilter의 oauth2ClientContext를 사용할 수 있다 -->
+    <oauth2:rest-template id="restTemplate" resource="google"/>
+	
     
-   	 <!-- Interceptor 설정 추가  -->
-    <!-- <mvc:interceptors>     
-        공통 Interceptor
-       <mvc:interceptor>
-         모든 폴더(경로)가 대상
-         <mvc:mapping path="/**"/>
-         예외대상: stylesheet, imgs,..
-         <mvc:exclude-mapping path="/resources/**"/>
-         <mvc:exclude-mapping path="/static/**"/>
-         <bean id="authInterceptor" 
-            class="com.green.interceptor.AuthInterceptor">
-         </bean>       
-       </mvc:interceptor>
-    </mvc:interceptors> -->
 </beans>
 
 

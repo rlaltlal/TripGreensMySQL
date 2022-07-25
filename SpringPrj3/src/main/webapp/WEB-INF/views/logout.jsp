@@ -22,24 +22,19 @@
    <!-- 메뉴 -->
 	<%@ include file="/WEB-INF/include/menu.jsp" %>
 	<hr>
-	<div class="middlee" style="text-align: center;">
+	<div class="middlee">
    <h1 name="log">로그인</h1> 
-   <form action="/login" method="post">
-   <input type="text" placeholder="example@greens.trip" name="userId"><br><br>
+   <form action="/login" method="post" >
+   <input type="text"  name="userId"><br><br>
    <input type="password" placeholder="****" name="userPw"><br><br>  
-   <p style="color: red;">${requestScope.loginFailMsg}</p>
+   <input type="submit" value="로그인" name="submitt"> 
    
-   <input type="submit" value="로그인" name="submitt" style="width:300px; height: 50px; margin-bottom: 20px;"> 
-   
-</form>
-<a href="/submit">회원가입</a>  
-<a href="http://localhost:9090/findpassword">비밀번호 찾기</a>
-<div style="padding-bottom: 20px; margin: 30px 0px 20px; "> 
-   <a href="/oauth2/authorization/google"><img src="/img/google.png" alt="" style="width:300px; height:50px"></a>
-</div>
-<div style="padding-bottom: 10px; margin: 10px auto;">
-   <img src="/img/naver.png" alt="" style="width:300px;height:55px" hidden>
-</div>
+   <c:if test="${msg == false}">
+   <p style="color: red;">로그인 실패! 이메일 또는 비밀번호를 확인해주세요.</p>
+   </c:if>
+   </form>
+   <a href="/submit">회원가입</a>&emsp;&ensp;
+   <a href="/findpassword">비밀번호 찾기</a>
    </div>
-
-</body></html>
+</body>
+</html>

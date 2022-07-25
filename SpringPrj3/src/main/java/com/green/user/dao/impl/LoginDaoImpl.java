@@ -29,6 +29,22 @@ public class LoginDaoImpl implements LoginDao {
 		
 	}
 
+	@Override
+	public UserVo login_security(HashMap<String, Object> map) {
+		UserVo vo=sqlSession.selectOne("User.login_security",map);
+		return vo;
+	}
+
+	@Override
+	public UserVo save_oauth2(UserVo user) {
+		user.setNickname("구글사용자");
+		user.setPasswd("구글사용자의비밀번호");
+		sqlSession.insert("User.save_oauth2", user);
+		HashMap<String,Object> map=new HashMap<String, Object>();
+		map.put("email", user.getEmail());
+		return sqlSession.selectOne("User.login_security",map);
+	}
+
 
 
 }

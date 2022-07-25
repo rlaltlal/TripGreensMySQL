@@ -2,6 +2,7 @@ package com.green.user.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class HomeController {
 	private BoardService2 boardService;
    
 	@RequestMapping("/")
-	public ModelAndView home( @RequestParam HashMap<String,Object> map) {
+	public ModelAndView home( @RequestParam HashMap<String,Object> map,Principal principal) {
 		List<BoardVo2> list2 = boardService.listAll2("", "MENU03");
 		List<BoardVo2> list3 = boardService.listAll2("SEOUL", "MENU03");
 		List<BoardVo2> list4 = boardService.listAll2("BUSAN", "MENU03");
@@ -57,6 +58,9 @@ public class HomeController {
 		map.put("list5", list5);		// 리스트
 		map.put("list6", list6);		// 리스트
 		mv.addObject("map",map);
+		if(principal != null) {
+			mv.addObject("email",principal.getName());
+		}
 		
 //		if(vo==null) {
 //			
@@ -68,7 +72,38 @@ public class HomeController {
 		//mv.addObject("sessionScope",vo.getEmail());
 		return mv; 
 	}
-	@RequestMapping("/login")
+	@RequestMapping("/home")
+	public ModelAndView home2( @RequestParam HashMap<String,Object> map,Principal principal) {
+		List<BoardVo2> list2 = boardService.listAll2("", "MENU03");
+		List<BoardVo2> list3 = boardService.listAll2("SEOUL", "MENU03");
+		List<BoardVo2> list4 = boardService.listAll2("BUSAN", "MENU03");
+		List<BoardVo2> list5 = boardService.listAll2("JEJU", "MENU03");
+		List<BoardVo2> list6 = boardService.listAll2("ETC", "MENU03");
+		
+		
+		ModelAndView mv=new ModelAndView();
+		mv.setViewName("home");
+		map.put("list2", list2);		// 리스트
+		map.put("list3", list3);		// 리스트
+		map.put("list4", list4);		// 리스트
+		map.put("list5", list5);		// 리스트
+		map.put("list6", list6);		// 리스트
+		mv.addObject("map",map);
+		if(principal != null) {
+			mv.addObject("email",principal.getName());
+		}
+		
+//		if(vo==null) {
+//			
+//		}
+//		else {
+//			mv.addObject("vo",vo);
+//			
+//		}
+		//mv.addObject("sessionScope",vo.getEmail());
+		return mv; 
+	}
+	@RequestMapping("/loginpage")
 	public String login() {
 		return "login"; //로그인 성공시 홈으로 그냥 이동
 	}                   //실패시 로그인 화면 그대로&로그인 실패 팝업창
@@ -162,10 +197,10 @@ public class HomeController {
 		return "redirect:/";
 	}
 	@RequestMapping("/search")
-	public ModelAndView trainreservform(HashMap<String,Object>map, HttpSession session) {
+	public ModelAndView trainreservform(HashMap<String,Object>map, 
+			Principal principal) {
 		ModelAndView mv=new ModelAndView();
-		String email=(String)session.getAttribute("email");
-		if(email==null) {
+		if(principal==null) {
 			mv.setViewName("/login");
 		}
 		else {

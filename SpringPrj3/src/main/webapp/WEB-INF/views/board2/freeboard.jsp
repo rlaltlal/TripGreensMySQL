@@ -179,14 +179,16 @@ table, th, td {
   </form>   
   </div>
   <div>
-              <c:choose>
-		           <c:when test="${sessionScope.email eq null}">
-		  	           <a href="/login" style="padding-right: 20px ;">글쓰기</a>
-		           </c:when>
-		           <c:otherwise>
-   <h2><a href="/Board2/WriteForm?menu_id=MENU03&email=${sessionScope.email}"   style="font-size:25px;">글쓰기</a></h2><br>
-		            </c:otherwise>
-           	</c:choose>  </div>
+  <s:authentication property="principal.Name"/>
+  
+  
+ 			 <s:authorize access="isAnonymous()">
+		  	     <a href="/login" style="padding-right: 20px ;">글쓰기</a>
+		  	 </s:authorize>
+		  	 <s:authorize access="isAuthenticated()">
+	    	    <h2><a href="/Board2/WriteForm?menu_id=MENU03&email=${_csrf.parameterName}"   style="font-size:25px;">글쓰기</a></h2><br>
+		  	 </s:authorize>
+           </div>
   </div>	
    <br>
    <br>
